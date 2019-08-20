@@ -1,0 +1,73 @@
+openapi: '3.0.2'
+info:
+  title: Java 11 Native Client Bug Demo
+  description: >
+    A demo showing that the java 11 client behavior is different from jersey2
+  version: 0.0.1
+servers:
+  - url: http://localhost:9080/
+paths:
+  /file/withConsumes:
+    post:
+      summary: A non-streaming file upload API
+      operationId: uploadFile
+      requestBody:
+        description: A CSV File
+        required: true
+        content:
+          text/csv:
+            schema:
+              type: string
+              format: base64
+      responses:
+        '201':
+          description: File successfully uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadResult'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /file/withoutConsumes:
+    post:
+      summary: A non-streaming file upload API
+      operationId: uploadFileWithoutConsumes
+      requestBody:
+        description: A CSV File
+        required: true
+        content:
+          text/csv:
+            schema:
+              type: string
+              format: base64
+      responses:
+        '201':
+          description: File successfully uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadResult'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    FileUploadResult:
+      required:
+        - result
+      properties:
+        result:
+          type: string
+    Error:
+      required:
+        - code
+      properties:
+        code:
+          type: string
